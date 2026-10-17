@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Telegram Alarm</string>
+    <string name="listener_label">Telegram Alarm notification watcher</string>
+
+    <string name="intro">Sounds a loud alarm whenever a Telegram notification arrives. Give it notification access below, keep the switch on, and leave the app installed.</string>
+
+    <string name="status_on">✅ Notification access granted — the alarm is armed.</string>
+    <string name="status_off">⚠️ Notification access NOT granted. Tap the button below to turn it on, or the alarm can\'t see your Telegram notifications.</string>
+
+    <string name="grant_access">Grant notification access</string>
+    <string name="open_access_settings">Open notification access settings</string>
+
+    <string name="alarm_enabled">Alarm armed</string>
+
+    <string name="watched_apps">Telegram apps to watch</string>
+    <string name="watched_apps_hint">Leave the one you use ticked. The official Telegram app is org.telegram.messenger.</string>
+
+    <string name="test_alarm">Test the alarm now</string>
+    <string name="stop_alarm">Stop the alarm</string>
+    <string name="stop">STOP</string>
+
+    <string name="alarm_headline">TELEGRAM!</string>
+    <string name="alarm_subhead">You got a Telegram notification</string>
+
+    <string name="alarm_notif_title">Telegram Alarm</string>
+    <string name="alarm_notif_text">Telegram notification received — tap STOP to silence</string>
+
+    <string name="alarm_channel_name">Alarm</string>
+    <string name="alarm_channel_desc">The loud alarm that fires on a Telegram notification</string>
+</resources>

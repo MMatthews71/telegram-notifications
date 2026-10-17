@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.TelegramAlarm" parent="Theme.Material3.DayNight">
+        <item name="colorPrimary">@color/telegram_blue</item>
+    </style>
+
+    <!-- Full-screen alarm screen: no action bar. -->
+    <style name="Theme.TelegramAlarm.Alarm" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/alarm_red</item>
+    </style>
+
+</resources>
