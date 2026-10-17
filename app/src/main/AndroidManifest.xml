@@ -8,6 +8,13 @@
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <!-- Android 13+ needs this to show our own alarm notification -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Keep a persistent "armed" service alive so the listener isn't killed -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <!-- Re-arm automatically after a reboot -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- Ask to be exempt from battery optimisation so we keep running -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <application
         android:allowBackup="true"
@@ -41,6 +48,27 @@
         <receiver
             android:name=".StopAlarmReceiver"
             android:exported="false" />
+
+        <!-- Keeps the app process alive and high priority so the listener survives -->
+        <service
+            android:name=".WatcherService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Keeps the Telegram notification watcher alive so a message can trigger an alarm at any time." />
+        </service>
+
+        <!-- Re-arms the watcher after reboot or app update -->
+        <receiver
+            android:name=".BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
 
         <!-- The service that watches every notification on the phone -->
         <service

@@ -44,10 +44,27 @@ The app can't work until you grant it notification access — Android guards thi
 2. Tap **Grant notification access**. This opens Android's *Notification access* list.
 3. Find **Telegram Alarm**, turn it **on**, and confirm the warning dialog.
 4. Back in the app, the status should now read **✅ Notification access granted**.
-5. Make sure **Alarm armed** is switched on.
-6. Tap **Test the alarm now** to hear it. Tap **STOP** (or the STOP button on the lock screen) to silence it.
+5. Under **Keep it alive**, tap both buttons and allow them:
+   - **Stop battery optimisation** — so your phone doesn't kill the watcher after a while.
+   - **Allow full-screen alarm** — so the alarm takes over the whole screen instead of a small banner.
+   Both should then show a green ✅.
+6. Make sure **Alarm armed** is switched on.
+7. Tap **Test the alarm now** to hear it. Tap **STOP** (or the STOP button on the lock screen) to silence it.
 
 That's it. Leave the app installed and armed, and any Telegram message will set it off.
+
+## Staying alive in the background
+
+To be as reliable as Android allows, the app:
+
+- Runs a quiet, permanent **"Telegram Alarm is armed"** notification. That's a *foreground service* — it keeps the app's process alive and high priority so the system is far less likely to kill the notification watcher. (That notification is normal and expected; it's your proof the alarm is still watching.)
+- **Re-arms itself automatically after a reboot** or an app update.
+- **Asks the system to reconnect** the notification watcher if it's ever dropped.
+- Lets you turn off **battery optimisation** and allow **full-screen alarms** right from the main screen.
+
+### What it still can't do
+
+If the phone is **fully powered off or the battery is dead**, nothing can run — no app can sound an alarm on a device that isn't on. As long as the phone is on (even locked, asleep, silent, or in Do Not Disturb), the alarm fires.
 
 ### If it doesn't fire or the screen doesn't pop up
 

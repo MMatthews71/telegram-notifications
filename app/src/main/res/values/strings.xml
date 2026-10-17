@@ -10,6 +10,13 @@
     <string name="grant_access">Grant notification access</string>
     <string name="open_access_settings">Open notification access settings</string>
 
+    <string name="reliability_header">Keep it alive</string>
+    <string name="reliability_hint">Grant both of these so your phone doesn\'t quietly shut the watcher down. Strongly recommended on Samsung, Xiaomi, Oppo and Huawei phones.</string>
+    <string name="battery_request">1. Stop battery optimisation</string>
+    <string name="battery_ok">✅ Battery optimisation off (good)</string>
+    <string name="fullscreen_request">2. Allow full-screen alarm</string>
+    <string name="fullscreen_ok">✅ Full-screen alarm allowed</string>
+
     <string name="alarm_enabled">Alarm armed</string>
 
     <string name="watched_apps">Telegram apps to watch</string>
@@ -27,4 +34,9 @@
 
     <string name="alarm_channel_name">Alarm</string>
     <string name="alarm_channel_desc">The loud alarm that fires on a Telegram notification</string>
+
+    <string name="watcher_channel_name">Armed status</string>
+    <string name="watcher_channel_desc">The quiet notification shown while the alarm is watching for Telegram messages</string>
+    <string name="watcher_notif_title">Telegram Alarm is armed</string>
+    <string name="watcher_notif_text">Watching for Telegram notifications</string>
 </resources>
