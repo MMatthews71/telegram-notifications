@@ -62,6 +62,28 @@ To be as reliable as Android allows, the app:
 - **Asks the system to reconnect** the notification watcher if it's ever dropped.
 - Lets you turn off **battery optimisation** and allow **full-screen alarms** right from the main screen.
 
+### If it doesn't fire while the screen is off / locked
+
+This is almost always your phone **freezing the app to save battery** once the
+screen turns off (Android calls it *Doze*). Fix it:
+
+1. In the app, tap **Stop battery optimisation** and allow it — it must show the
+   green ✅.
+2. Tap **Allow full-screen alarm** and allow it — green ✅. (This lets the alarm
+   wake the screen instead of showing a silent banner.)
+3. **Samsung phones** have an extra, separate setting that overrides the above:
+   Settings → **Battery → Background usage limits** → make sure Telegram Alarm is
+   **not** in *Sleeping apps* or *Deep sleeping apps* (remove it if it's there).
+   Also Settings → Apps → Telegram Alarm → Battery → **Unrestricted**.
+4. **Xiaomi / Oppo / Realme / Huawei** have similar "Autostart" and
+   "battery saver" toggles — enable Autostart for Telegram Alarm and set battery
+   to no restrictions.
+5. Keep the **"Telegram Alarm is armed"** notification showing — don't swipe it
+   away or disable it; it's what keeps the app alive.
+
+After changing these, reboot once and send yourself a test Telegram message with
+the screen off.
+
 ### What it still can't do
 
 If the phone is **fully powered off or the battery is dead**, nothing can run — no app can sound an alarm on a device that isn't on. As long as the phone is on (even locked, asleep, silent, or in Do Not Disturb), the alarm fires.

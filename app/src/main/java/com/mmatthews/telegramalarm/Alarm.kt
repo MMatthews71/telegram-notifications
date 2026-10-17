@@ -49,13 +49,23 @@ object Alarm {
 
     @Synchronized
     fun start(context: Context) {
-        if (isRunning) return
-        isRunning = true
         val app = context.applicationContext
-        postAlarmNotification(app)
+        val first = !isRunning
+        isRunning = true
+
+        // The notification + vibration only need to be set up once.
+        if (first) {
+            postAlarmNotification(app)
+            startVibration(app)
+        }
+
+        // The wake lock and sound are (re)ensured on every call. This makes the
+        // alarm self-healing: when the phone is asleep, the full-screen AlarmActivity
+        // wakes the screen and calls start() again from the foreground — a context
+        // Doze can't throttle — so even if the background attempt was frozen, the
+        // sound reliably plays.
         acquireWakeLock(app)
         startSound(app)
-        startVibration(app)
     }
 
     @Synchronized
@@ -125,6 +135,22 @@ object Alarm {
     }
 
     private fun startSound(context: Context) {
+        // If a player is already going (e.g. the background attempt succeeded),
+        // leave it running rather than restarting the loop.
+        val alreadyPlaying = try {
+            mediaPlayer?.isPlaying == true
+        } catch (_: Exception) {
+            false
+        }
+        if (alreadyPlaying) return
+
+        // Drop any half-set-up player from a throttled earlier attempt.
+        try {
+            mediaPlayer?.release()
+        } catch (_: Exception) {
+        }
+        mediaPlayer = null
+
         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)
         audioManager.setStreamVolume(AudioManager.STREAM_ALARM, maxVol, 0)
@@ -133,17 +159,23 @@ object Alarm {
             ?: RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE)
             ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
-        mediaPlayer = MediaPlayer().apply {
-            setDataSource(context, uri)
-            setAudioAttributes(
-                AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_ALARM)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .build()
-            )
-            isLooping = true
-            setOnPreparedListener { it.start() }
-            prepareAsync()
+        try {
+            mediaPlayer = MediaPlayer().apply {
+                setDataSource(context, uri)
+                setAudioAttributes(
+                    AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_ALARM)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .build()
+                )
+                isLooping = true
+                // Synchronous prepare is more reliable than prepareAsync when the
+                // device is idle/dozing — no deferred callback to wait on.
+                prepare()
+                start()
+            }
+        } catch (_: Exception) {
+            mediaPlayer = null
         }
     }
 
@@ -163,9 +195,12 @@ object Alarm {
 
     private fun acquireWakeLock(context: Context) {
         val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-        wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "TelegramAlarm::WakeLock").apply {
-            setReferenceCounted(false)
-            acquire(10 * 60 * 1000L /* 10 min safety timeout */)
+        if (wakeLock == null) {
+            wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "TelegramAlarm::WakeLock").apply {
+                setReferenceCounted(false)
+            }
         }
+        // (Re)acquire with a fresh 10-minute safety timeout.
+        wakeLock?.acquire(10 * 60 * 1000L)
     }
 }

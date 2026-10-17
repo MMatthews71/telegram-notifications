@@ -24,9 +24,10 @@ class AlarmActivity : AppCompatActivity() {
         binding = ActivityAlarmBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // If we somehow got here without the sound running (e.g. launched from a
-        // stale notification), make sure it is going so there is something to stop.
-        if (!Alarm.isRunning) Alarm.start(this)
+        // Drive the alarm from this foreground, screen-on context. start() is
+        // self-healing: if the background attempt was frozen by Doze while the
+        // phone was asleep, this guarantees the sound actually plays now.
+        Alarm.start(this)
 
         binding.stopButton.setOnClickListener {
             Alarm.stop(this)
